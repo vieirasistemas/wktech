@@ -1,3 +1,38 @@
+DROP TABLE IF EXISTS `produto`;
+CREATE TABLE `produto` (
+  `id_produto` int(11) NOT NULL AUTO_INCREMENT,
+  `descricao` varchar(50) NOT NULL,
+  `precovenda` double NOT NULL,
+  PRIMARY KEY (`id_produto`),
+  KEY `id_descricao` (`descricao`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
+INSERT INTO `produto` VALUES ('1', 'OCULOS WAYFARER', '180');
+INSERT INTO `produto` VALUES ('2', 'OC VER AVIADOR METAL', '109.99');
+INSERT INTO `produto` VALUES ('3', 'OC VER B881291', '50');
+INSERT INTO `produto` VALUES ('4', 'OC VER B881320', '74.99');
+INSERT INTO `produto` VALUES ('5', 'OC VER B881266', '74.99');
+INSERT INTO `produto` VALUES ('6', 'OC VER 009102', '109.99');
+INSERT INTO `produto` VALUES ('7', 'OC VER 2140', '109.99');
+INSERT INTO `produto` VALUES ('8', 'OC VER VZ003', '109.99');
+INSERT INTO `produto` VALUES ('9', 'OC VER D2604', '109.99');
+INSERT INTO `produto` VALUES ('10', 'OC VER 009184', '109.99');
+INSERT INTO `produto` VALUES ('11', 'OC VER 1272', '109.99');
+INSERT INTO `produto` VALUES ('12', 'OC VER 009264', '109.99');
+INSERT INTO `produto` VALUES ('13', 'OC VER 2225', '109.99');
+INSERT INTO `produto` VALUES ('14', 'OC VER 5500P', '109.99');
+INSERT INTO `produto` VALUES ('15', 'OC VER 507', '109.99');
+INSERT INTO `produto` VALUES ('16', 'OC VER MMJ287', '109.99');
+INSERT INTO `produto` VALUES ('17', 'OC B881307', '50');
+INSERT INTO `produto` VALUES ('18', 'OC VER B881247', '74.99');
+INSERT INTO `produto` VALUES ('19', 'OC VER 1319', '109.99');
+INSERT INTO `produto` VALUES ('20', 'OC VER B881284', '74.99');
+INSERT INTO `produto` VALUES ('21', 'OC VER B881317', '74.99');
+INSERT INTO `produto` VALUES ('22', 'OC VER B88371', '50');
+INSERT INTO `produto` VALUES ('23', 'OC VER 17161', '50');
+INSERT INTO `produto` VALUES ('24', 'OC VER 17164', '50');
+INSERT INTO `produto` VALUES ('25', 'OC VER17159', '109.99');
+
 DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE `cliente` (
   `codigo` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,37 +95,3 @@ CREATE TABLE `pedido_produto` (
   CONSTRAINT `fk_produto` FOREIGN KEY (`idproduto`) REFERENCES `produto` (`id_produto`) ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `produto`;
-CREATE TABLE `produto` (
-  `id_produto` int(11) NOT NULL AUTO_INCREMENT,
-  `descricao` varchar(50) NOT NULL,
-  `precovenda` double NOT NULL,
-  PRIMARY KEY (`id_produto`),
-  KEY `id_descricao` (`descricao`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
-
-INSERT INTO `produto` VALUES ('1', 'OCULOS WAYFARER', '180');
-INSERT INTO `produto` VALUES ('2', 'OC VER AVIADOR METAL', '109.99');
-INSERT INTO `produto` VALUES ('3', 'OC VER B881291', '50');
-INSERT INTO `produto` VALUES ('4', 'OC VER B881320', '74.99');
-INSERT INTO `produto` VALUES ('5', 'OC VER B881266', '74.99');
-INSERT INTO `produto` VALUES ('6', 'OC VER 009102', '109.99');
-INSERT INTO `produto` VALUES ('7', 'OC VER 2140', '109.99');
-INSERT INTO `produto` VALUES ('8', 'OC VER VZ003', '109.99');
-INSERT INTO `produto` VALUES ('9', 'OC VER D2604', '109.99');
-INSERT INTO `produto` VALUES ('10', 'OC VER 009184', '109.99');
-INSERT INTO `produto` VALUES ('11', 'OC VER 1272', '109.99');
-INSERT INTO `produto` VALUES ('12', 'OC VER 009264', '109.99');
-INSERT INTO `produto` VALUES ('13', 'OC VER 2225', '109.99');
-INSERT INTO `produto` VALUES ('14', 'OC VER 5500P', '109.99');
-INSERT INTO `produto` VALUES ('15', 'OC VER 507', '109.99');
-INSERT INTO `produto` VALUES ('16', 'OC VER MMJ287', '109.99');
-INSERT INTO `produto` VALUES ('17', 'OC B881307', '50');
-INSERT INTO `produto` VALUES ('18', 'OC VER B881247', '74.99');
-INSERT INTO `produto` VALUES ('19', 'OC VER 1319', '109.99');
-INSERT INTO `produto` VALUES ('20', 'OC VER B881284', '74.99');
-INSERT INTO `produto` VALUES ('21', 'OC VER B881317', '74.99');
-INSERT INTO `produto` VALUES ('22', 'OC VER B88371', '50');
-INSERT INTO `produto` VALUES ('23', 'OC VER 17161', '50');
-INSERT INTO `produto` VALUES ('24', 'OC VER 17164', '50');
-INSERT INTO `produto` VALUES ('25', 'OC VER17159', '109.99');

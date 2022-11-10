@@ -22,14 +22,22 @@ implementation
 procedure TPedidoProdutoDAO.Delete(const aId: integer);
 begin
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'delete from pedido_produto where id = :id';
     FQuery.ParamByName('id').AsInteger  :=  aId;
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
     except
-      raise Exception.Create('Erro ao inserir o PedidoProduto');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
   finally
     FQuery.Close;
@@ -42,6 +50,9 @@ var
 begin
   PedidoProduto  :=  aObjeto as TPedidoProduto;
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'insert into pedido_produto(idpedido, idproduto, qtd, vlrunit, vlrtotal) ' +
                         'values (:idpedido, :idproduto, :qtd, :vlrunit, :vlrtotal)';
@@ -53,9 +64,14 @@ begin
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
       pedidoproduto.id  :=  GetLastId('id', 'pedido_produto');
     except
-      raise Exception.Create('Erro ao inserir o PedidoProduto');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
 
     Result  :=  PedidoProduto.id;
@@ -98,6 +114,9 @@ var
 begin
   PedidoProduto  :=  aObjeto as TPedidoProduto;
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'update pedido_produto set ' +
                         ' idpedido = :idpedido, ' +
@@ -115,8 +134,13 @@ begin
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
     except
-      raise Exception.Create('Erro ao inserir o PedidoProduto');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
   finally
     FQuery.Close;

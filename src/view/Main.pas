@@ -94,27 +94,34 @@ procedure TForm1.btCancelarClick(Sender: TObject);
 var
   pedido: TPedido;
   pedidodao: TPedidoDAO;
-  idx, rowcount: integer;
-  descricao: string;
-  vlr: double;
 begin
+  Fidpedido  :=  StrToIntDef(InputBox('Localizar Pedido', 'Informe o numero do pedido', ''), 0);
   if Fidpedido > 0 then
   begin
-    if Application.MessageBox('Confirma Operação?','Cancelar Pedido',MB_YESNO)=ID_YES  then
-      try
-        pedido  :=  TPedido.Create;
-        pedidodao :=  TPedidoDAO.Create;
-        pedido  :=  pedidodao.Select(Fidpedido) as TPedido;
+    pedidodao :=  TPedidoDAO.Create;
+    pedido  :=  pedidodao.Select(Fidpedido) as TPedido;
 
-        if pedido.idpedido > 0 then
-        begin
-          pedidodao.Delete(pedido.idpedido);
-          LimparTela;
+    if assigned(pedido) and (pedido.idpedido > 0) then
+    begin
+      if Application.MessageBox('Confirma Operação?','Cancelar Pedido',MB_YESNO)=ID_YES  then
+        try
+          pedidodao :=  TPedidoDAO.Create;
+          pedido  :=  pedidodao.Select(Fidpedido) as TPedido;
+
+          if assigned(pedido) and (pedido.idpedido > 0) then
+          begin
+            pedidodao.Delete(pedido.idpedido);
+            LimparTela;
+          end;
+        finally
+          pedidodao.Free;
+          pedido.Free;
         end;
-      finally
-        pedidodao.Free;
-        pedido.Free;
-      end;
+    end
+    else
+      ShowMessage('Pedido nao encontrado.');
+
+    edClienteExit(self);
   end;
 end;
 
@@ -198,12 +205,10 @@ var
   vlr: double;
 begin
   Fidpedido  :=  StrToIntDef(InputBox('Localizar Pedido', 'Informe o numero do pedido', ''), 0);
+  pedidodao :=  TPedidoDAO.Create;
+  pedido  :=  pedidodao.Select(Fidpedido) as TPedido;
   try
-    pedido  :=  TPedido.Create;
-    pedidodao :=  TPedidoDAO.Create;
-    pedido  :=  pedidodao.Select(Fidpedido) as TPedido;
-
-    if pedido.idpedido > 0 then
+    if assigned(pedido) and (pedido.idpedido > 0)then
     begin
       lbPedido.Caption  :=  pedido.idpedido.ToString;
       edCliente.Text  :=  pedido.idcliente.ToString;
@@ -228,7 +233,8 @@ begin
       ShowMessage('Pedido nao encontrado');
     end;
   finally
-
+    pedidodao.Free;
+    pedido.Free;
   end;
 end;
 
@@ -293,6 +299,9 @@ var
 begin
   if (key = VK_DELETE) and (grid.RowCount > 1) then
   begin
+    if Application.MessageBox('Confirma Operação?','Excluir Item',MB_YESNO) <> ID_YES  then
+      exit;
+
     row :=  grid.Row;
 
     for idx := row to Grid.RowCount - 2 do

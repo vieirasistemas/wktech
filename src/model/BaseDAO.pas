@@ -28,6 +28,7 @@ constructor TBaseDAO.Create;
 begin
   FQuery  :=  TFDQuery.Create(nil);
   FQuery.Connection :=  dmMain.fdcWKTech;
+  FQuery.CachedUpdates  :=  true;
 end;
 
 destructor TBaseDAO.Destroy;

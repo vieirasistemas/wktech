@@ -40,15 +40,24 @@ end;
 procedure TPedidoDAO.Delete(const aId: integer);
 begin
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'delete from pedido where idpedido = :idpedido';
     FQuery.ParamByName('idpedido').AsInteger  :=  aId;
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
     except
-      raise Exception.Create('Erro ao inserir o pedido');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
+
   finally
     FQuery.Close;
   end;
@@ -60,6 +69,9 @@ var
 begin
   pedido  :=  aObjeto as TPedido;
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'insert into pedido(idpedido, idcliente, emissao, vlrtotal) ' +
                         'values (:idpedido, :idcliente, :emissao, :vlrtotal)';
@@ -70,8 +82,13 @@ begin
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
     except
-      raise Exception.Create('Erro ao inserir o pedido');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
 
     Result  :=  pedido.idpedido;
@@ -112,20 +129,15 @@ var
   pedidoprodutoDAO: TPedidoProdutoDAO;
 begin
   try
-    pedidoproduto :=  TPedidoProduto.Create;
-    pedidoprodutoDAO  :=  TPedidoProdutoDAO.Create;
-
     FQuery.Close;
     FQuery.SQL.Text :=  'select id from pedido_produto where idpedido = ' + aPedido.idpedido.ToString;
     FQuery.Open;
     while not FQuery.Eof do
     begin
-      pedidoproduto :=  TPedidoProduto.Create;
       pedidoprodutoDAO  :=  TPedidoProdutoDAO.Create;
-
       pedidoproduto :=  pedidoprodutodao.Select(FQuery.FieldByName('id').AsInteger) as TPedidoProduto;
 
-      if pedidoproduto.id > 0 then
+      if assigned(pedidoproduto) and (pedidoproduto.id > 0) then
         aPedido.produtos.Add(pedidoproduto);
 
       FQuery.Next;
@@ -141,6 +153,9 @@ var
 begin
   pedido  :=  aObjeto as TPedido;
   try
+    if not FQuery.Connection.InTransaction then
+      FQuery.Connection.StartTransaction;
+
     FQuery.Close;
     FQuery.SQL.Text :=  'update pedido set ' +
                         ' idcliente = :idcliente, ' +
@@ -154,8 +169,13 @@ begin
 
     try
       FQuery.ExecSQL;
+      FQuery.Connection.Commit;
     except
-      raise Exception.Create('Erro ao inserir o pedido');
+      on e: Exception do
+      begin
+        FQuery.Connection.Rollback;
+        raise Exception.Create('Ocorreu o seguinte erro:' + sLineBreak + e.Message);
+      end;
     end;
   finally
     FQuery.Close;
